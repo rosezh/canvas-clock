@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>canvas画时钟</title>
+	</head>
+	<style>
+		header{
+			text-align: center;
+			font-family: "微软雅黑";
+			color: deepskyblue;
+			font-weight: bold;
+		}
+		#myCanvas{
+			display: block;
+			margin: 10px auto;
+		}
+	</style>
+	<body>
+		<header>
+			<h1>
+				canvas时钟
+			</h1>
+		</header>
+		<canvas id="myCanvas" width="400" height="400"></canvas>
+		<script>
+			var myCanvas=document.getElementById("myCanvas");
+			var c=myCanvas.getContext("2d");
+			
+			function clock(){
+				c.clearRect(0,0,400,400);//清理原来的矩形空间
+				var data=new Date();
+				var sec=data.getSeconds();
+				var min=data.getMinutes();
+				var hour=data.getHours();
+				
+				c.save();
+				c.translate(200,200);//移到中间
+				c.rotate(-Math.PI/2);//旋转90度
+				
+				for(var i=0;i<60;i++)
+				{
+					c.beginPath();//开始绘图
+					c.strokeStyle="red";
+					c.lineWidth=5;//线宽
+					c.moveTo(117,0);
+					c.lineTo(120,0);
+					c.stroke();
+					c.rotate(Math.PI/30);
+					c.closePath();
+				}
+				for(var i=0;i<12;i++)
+				{
+					c.beginPath();//开始绘图
+					c.strokeStyle="black";
+					c.lineWidth=5;//线宽
+					c.moveTo(115,0);
+					c.lineTo(125,0);
+					c.stroke();
+					c.rotate(Math.PI/6);//每次旋转30度
+					c.closePath();
+				}
+				
+				//外表盘
+				c.beginPath();
+				c.strokeStyle="deepskyblue";
+				c.arc(0,0,145,0,Math.PI*2);
+				c.lineWidth=8;
+				c.stroke();
+				c.closePath();
+				
+				//画时针
+				hour=hour>12?hour-12:hour;
+				//console.log(hour);
+				c.beginPath();
+				c.save();
+				c.rotate(Math.PI/6*hour+Math.PI/6*min/60+Math.PI/6*sec/3600);//时针旋转的角度
+				c.strokeStyle="yellowgreen";
+				c.lineWidth=4;
+				c.moveTo(-20,0);
+				c.lineTo(50,0);
+				c.stroke();
+				c.restore();
+				c.closePath();
+				
+				//画分针
+				c.beginPath();
+				c.save();
+				c.rotate(Math.PI/30*min+Math.PI/30*sec/60);
+				c.strokeStyle="springgreen";
+				c.lineWidth=3;
+				c.moveTo(-30,0);
+				c.lineTo(70,0);
+				c.stroke();
+				c.restore();
+				c.closePath();
+				
+				//画秒针
+				c.beginPath();
+				c.save();
+				c.rotate(Math.PI/30*sec);
+				c.strokeStyle="red";
+				c.lineWidth=2;
+				c.moveTo(-40,0);
+				c.lineTo(120,0);
+				c.stroke();
+				c.restore();//注意有两个这段代码
+				c.closePath();
+				
+				c.restore();//注意有两个这段代码
+				
+			}
+			clock();
+			setInterval(clock,1000);
+		</script>
+	</body>
+</html>
